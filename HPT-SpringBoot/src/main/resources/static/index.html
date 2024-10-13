@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App Dashboard</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Fontawesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .icon-box {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+      }
+      .icon-box:hover {
+        transform: scale(1.05);
+      }
+      .icon-box i {
+        font-size: 40px;
+        margin-bottom: 15px;
+      }
+      .icon-title {
+        margin-top: 10px;
+        font-size: 18px;
+      }
+      .icon-container {
+        margin: 20px auto;
+        max-width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container icon-container">
+      <div class="row">
+        <!-- Phòng ban -->
+        <div class="col-6 col-md-6">
+          <a href="/departments" class="text-decoration-none text-dark">
+            <div class="icon-box bg-pink">
+              <i class="fa-solid fa-door-open"></i>
+              <div class="icon-title">Phòng ban</div>
+            </div>
+          </a>
+        </div>
+        <!-- Nhân viên -->
+        <div class="col-6 col-md-6">
+          <a href="/employees" class="text-decoration-none text-dark">
+            <div class="icon-box bg-orange">
+              <i class="fa-solid fa-employees"></i>
+              <div class="icon-title">Nhân viên</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
