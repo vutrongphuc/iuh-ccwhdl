@@ -6,6 +6,7 @@
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <title>Update Department</title>
 </head>
 <body>
 <div class="container">
@@ -20,7 +21,6 @@
     </form>
 </div>
 
-
 <!-- Call API update a department -->
 <script type="text/javascript">
     $(document).ready(function () {
@@ -30,14 +30,16 @@
                 department_id: $("#department_id").val(),
                 department_name: $("#department_name").val()
             };
+
+            /* Send AJAX request to update department */
             $.ajax({
-                url: "/api/department/" + department.department_id,
-                method: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify(department),
+                url: "/api/department/" + department.department_id, // URL of the API to update a department
+                method: "PUT", // Method
+                contentType: "application/json", // Type json
+                data: JSON.stringify(department), // Convert department object to json
                 success: function (response) {
                     alert("Department updated successfully!");
-                    window.location.href = "/department";
+                    window.location.href = "/department"; // Redirect the user to the department list page
                 },
                 error: function (error) {
                     console.log("Error updating department", error);
