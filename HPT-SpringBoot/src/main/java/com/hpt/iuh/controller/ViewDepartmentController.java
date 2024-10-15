@@ -2,7 +2,6 @@ package com.hpt.iuh.controller;
 
 import com.hpt.iuh.model.Department;
 import com.hpt.iuh.repository.DepartmentRepository;
-import com.hpt.iuh.util.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
