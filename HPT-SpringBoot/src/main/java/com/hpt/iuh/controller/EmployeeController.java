@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // This means that this class is a Controller
+@RestController // This means that this class is a Controller that creates REST APIs
 @RequestMapping("/api") // This means URL's start with /api (after Application path)
 public class EmployeeController {
 
