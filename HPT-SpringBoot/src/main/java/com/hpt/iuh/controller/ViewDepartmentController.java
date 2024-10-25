@@ -22,29 +22,13 @@ public class ViewDepartmentController {
     // View show all departments
     @GetMapping("/")
     public String allDepartment() {
-        return "departments/all";
+        return "departments/all"; // render all.html on template/departments/all
     }
 
     // View add a department
     @GetMapping("/add")
-    public String addDepartment(Model model) {
-        model.addAttribute("department", new Department());
-        return "departments/add";
-    }
-
-    // View Method add department
-    @PostMapping("/add")
-    public String addDepartment(@ModelAttribute("department") Department department, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "departments/add";
-        }
-        try {
-            departmentRepository.save(department);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error saving department: " + e.getMessage());
-            return "departments/add";
-        }
-        return "redirect:/";
+    public String addDepartment() {
+        return "departments/add"; // template/departments/add
     }
 
     // View update a department
