@@ -12,16 +12,47 @@
     <title>Update Department</title>
 </head>
 <body>
+<!--Use API on Department Controller-->
+<script>
+    $(document).ready(function(){
+        $("#update-department").on("submit", function (event) {
+            event.preventDefault(); // Prevent page reload
+            const departmentId = $("#departmentId").val();
+            const departmentName = $("#departmentName").val();
+
+            // Send POST request with department data
+            $.ajax({
+                url: "/api/department/" + departmentId,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    department_id: departmentId,
+                    department_name: departmentName
+                }),
+                success: function() {
+                    alert("Department updated successfully!");
+                    $("#departmentName").val(''); // Clear the input field
+                    window.location.href = "/department/"; // Redirect the user to the department list page
+
+                },
+                error: function() {
+                    alert("Failed to udpate department.");
+                }
+
+            });
+        });
+    });
+</script>
 
 <div class="container">
     <h1>Update Department</h1>
-    <form id="updateDepartmentForm" class="row g-3">
-        <input type="hidden" id="department_id" class="form-control" th:value="${department.department_id}"/>
+    <form id="update-department" class="row g-3">
+        <input type="hidden" id="departmentId" class="form-control" th:value="${department.department_id}"/>
         <div class="col-auto">
-            <label for="department_name" class="form-label">Name:</label>
-            <input type="text" id="department_name" class="form-control" th:value="${department.department_name}"/>
+            <label for="departmentName" class="form-label">Name:</label>
+            <input type="text" id="departmentName" class="form-control" th:value="${department.department_name}"/>
         </div>
-        <button onclick="departmentCallAPIUpdate()" class="btn btn-primary">Update</button>
+        <button class="btn btn-primary">Update</button>
     </form>
 </div>
 
