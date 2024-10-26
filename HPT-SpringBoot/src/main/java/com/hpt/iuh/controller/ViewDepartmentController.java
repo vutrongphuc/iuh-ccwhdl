@@ -7,8 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller // This means that this class is a Controller that creates Views
@@ -34,12 +35,11 @@ public class ViewDepartmentController {
     // View update a department
     @GetMapping("/update/{id}")
     public String updateDepartment(@PathVariable("id") String id, Model model) {
-        logger.info("Updating User with id {}", id);
         Department dp = departmentRepository.findById(id).orElse(null);
         if (dp == null) {
-            logger.error("Unable to update. User with id {} not found.", id);
-            throw new RuntimeException("Unable to update. User with id " + id + " not found.");
+            throw new RuntimeException("Unable to update. Department with id " + id + " not found.");
         }
+        // Add department data to model
         model.addAttribute("department", dp);
         return "departments/update";
     }
