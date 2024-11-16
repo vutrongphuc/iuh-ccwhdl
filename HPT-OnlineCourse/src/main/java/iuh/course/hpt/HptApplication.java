@@ -1,0 +1,13 @@
+package iuh.course.hpt;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HptApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(HptApplication.class, args);
+	}
+
+}

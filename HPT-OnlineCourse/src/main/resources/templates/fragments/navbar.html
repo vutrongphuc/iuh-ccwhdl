@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>navbar</title>
+</head>
+<body>
+<div th:fragment="navbar">
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+        <a th:href="@{/}" class="navbar-brand">
+            <h1 class="m-0 text-primary logo">HPT</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto">
+                <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About Us</a>
+                <a href="classes.html" class="nav-item nav-link">Classes</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
+                        <a href="facility.html" class="dropdown-item">School Facilities</a>
+                        <a href="team.html" class="dropdown-item">Popular Teachers</a>
+                        <a href="call-to-action.html" class="dropdown-item">Become A Teachers</a>
+                        <a href="appointment.html" class="dropdown-item">Make Appointment</a>
+                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="404.html" class="dropdown-item">404 Error</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Contact Us</a>
+
+            </div>
+            <a th:if="!${session.user}" th:href="@{/login}" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">
+                Tham gia ngay <i class="fa fa-arrow-right ms-3"></i>
+            </a>
+            <div th:if="${session.user}" class="nav-item dropdown">
+                <a th:href="@{/profile}"
+                   class="btn btn-primary rounded-pill px-3 d-none d-lg-block nav-link dropdown-toggle"
+                   data-bs-toggle="dropdown">
+                    Trang cá nhân
+                </a>
+                <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
+                    <a th:href="@{/}" class="dropdown-item">Xem thông tin</a>
+                    <a th:href="@{/}" class="dropdown-item">Khóa học của tôi</a>
+                    <hr th:if="${session.user.isAdmin()}" class="dropdown-divider">
+                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                        lý danh mục</a>
+                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                        lý tác giả</a>
+                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                        lý khóa học</a>
+                    <hr class="dropdown-divider">
+                    <a th:href="@{/logout}" class="dropdown-item">Thoát</a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <!-- Navbar End -->
+</div>
+</body>
+</html>
