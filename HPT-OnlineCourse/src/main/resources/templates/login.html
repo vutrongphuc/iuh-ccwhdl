@@ -2,14 +2,14 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="layout::main(~{::section})">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>login</title>
 </head>
 <body>
 <section>
     <!-- Page Header End -->
     <div class="container-xxl py-5 page-header position-relative mb-5">
         <div class="container">
-            <h1 class="display-2 text-white animated slideInDown mb-4">Tham Gia HPT</h1>
+            <h1 class="display-6 text-white animated text-shadow slideInDown mt-4">Đăng nhập HPT</h1>
         </div>
     </div>
     <!-- Page Header End -->
@@ -41,7 +41,7 @@
                                             <input type="text" class="form-control border-0"
                                                    id="user_name" name="user_name" autofocus
                                                    required placeholder="Tên đăng nhập"
-                                                   th:field="*{userName}">
+                                                   th:field="*{username}">
                                             <label for="user_name">Tên đăng nhập</label>
                                         </div>
                                     </div>

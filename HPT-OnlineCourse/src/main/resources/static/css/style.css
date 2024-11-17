@@ -240,8 +240,9 @@ h6,
 }
 
 .page-header {
-    background: linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url(../img/carousel-1.jpg) center center no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url(../img/banner.jpg) center center no-repeat;
     background-size: cover;
+    height: 200px;
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -523,4 +524,8 @@ h6,
     bottom: 10px;
     right: 10px;
     z-index: 9999;
+}
+
+.text-shadow {
+    text-shadow: 4px 4px 12px black;
 }

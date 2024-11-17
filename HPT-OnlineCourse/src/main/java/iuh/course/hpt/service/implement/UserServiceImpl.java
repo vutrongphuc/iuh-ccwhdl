@@ -1,11 +1,17 @@
 package iuh.course.hpt.service.implement;
 
+import iuh.course.hpt.entity.Role;
 import iuh.course.hpt.entity.User;
-import iuh.course.hpt.entity.enums.Role;
+import iuh.course.hpt.entity.enums.RoleEnum;
+import iuh.course.hpt.repository.RoleRepository;
 import iuh.course.hpt.repository.UserRepository;
 import iuh.course.hpt.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,35 +19,41 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public boolean isValidUser(User user) {
-        User result = userRepository.findUserByUserNameAndPassword(user.getUserName(), user.getPassword());
-        if (result != null) {
-            user.setId(result.getId());
-            user.setUserName(result.getUserName());
-            user.setFullName(result.getPassword());
-            user.setRole(result.getRole());
-            user.setAdmin(result.getRole() == Role.ADMIN);
-            
-            return true;
-        }
-        return false;
-    }
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public boolean isUserExisted(String userName) {
-        User result = userRepository.findByUserName(userName);
+        User result = userRepository.findByUsername(userName);
         return result != null;
     }
 
     @Override
     public User save(User user) {
+        user.setUsername(user.getUsername().toLowerCase());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // set default role for user
+        if (user.getRole() == null) {
+            Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
+            if (optionalRole.isPresent()) {
+                user.setRole(optionalRole.get());
+            }
+        }
+
         user = userRepository.save(user);
-        user.setAdmin(user.getRole() == Role.ADMIN);
+
         return user;
     }
 
     @Override
     public void deleteById(Long id) {
         userRepository.deleteUserById(id);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

@@ -1,11 +1,19 @@
 package iuh.course.hpt.controller;
 
 import iuh.course.hpt.entity.User;
-import iuh.course.hpt.entity.enums.Role;
+import iuh.course.hpt.service.implement.UserDetailsServiceImpl;
+import iuh.course.hpt.service.implement.UserServiceImpl;
 import iuh.course.hpt.service.interfaces.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.thymeleaf.util.StringUtils;
+
 
 @Data
 @Controller
@@ -22,100 +31,134 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
     @GetMapping("/register")
-    public String register(HttpSession session, Model model) {
-        // redirect to home page if user already logged in
-        if (session.getAttribute("user") != null) {
-            return "index";
-        }
-        
-        model.addAttribute("title", "Sign Up");
+    public String register(Model model) {
+        model.addAttribute("title", "Đăng ký tài khoản");
         model.addAttribute("user", new User());
         return "register";
     }
 
     // save user
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveUser(HttpSession session, @ModelAttribute("user") User user, Model model) {
-        
+    public String saveUser(@ModelAttribute("user") User user, Model model) {
+
         // check repeat password
         if (!StringUtils.equalsIgnoreCase(user.getPassword(), user.getRepeatPassword())) {
             model.addAttribute("error", "Mật khẩu không khớp");
             return "register";
         }
-        
-        user.setUserName(user.getUserName().toLowerCase());
-        user.setRole(Role.USER); // default role is USER
-        
-        boolean isUserExisted = userService.isUserExisted(user.getUserName());
+
+        boolean isUserExisted = userService.isUserExisted(user.getUsername());
 
         if (isUserExisted) {
             model.addAttribute("error", "User đã tồn tại");
             return "register";
         }
 
+        String usr_pwd = user.getPassword();
+
         User result = userService.save(user);
-        
-        session.setAttribute("user", result);
+
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(result.getUsername(), usr_pwd));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         model.addAttribute("user", result);
-        model.addAttribute("success", "Chúc mừng bạn " + result.getFullName() + " đã bị dụ vào hệ thống học tập trực tuyến của HPT!<br />"
+        model.addAttribute("success", "Chúc mừng bạn <b>" + result.getFullName() + "</b> đã bị dụ vào hệ thống học tập trực tuyến của HPT!<br />"
                 + "Cám ơn đã đăng ký, chúc bạn học tốt và thành công!");
         return "index";
     }
 
     @GetMapping("/login")
-    public String login(HttpSession session, Model model) {
-        // redirect to home page if user already logged in
-        if (session.getAttribute("user") != null) {
-            return "index";
+    public String login(Model model, String error, String logout) {
+        if (error != null) {
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
         }
-        model.addAttribute("title", "Login");
+
+        if (logout != null) {
+            model.addAttribute("success", "Sớm quay lại bạn nhé!");
+        }
+
+        model.addAttribute("title", "Đăng nhập");
         model.addAttribute("user", new User());
         return "login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginUser(HttpSession session, @ModelAttribute("user") User user, Model model) {
-        boolean isValidUser = userService.isValidUser(user);
-
-        if (isValidUser) {
-            model.addAttribute("user ", user);
-            session.setAttribute("user", user);
-            model.addAttribute("success", "Welcome " + user.getFullName() + "!");
+    @GetMapping("/login-successful")
+    public String loginSuccessful(Model model) {
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if (authUser instanceof AnonymousAuthenticationToken) {
             return "index";
         }
 
-        model.addAttribute("error", "Sai Tên đăng nhập hoặc Password");
-        return "login";
-    }
-
-    @GetMapping(value = "/logout")
-    public String logout(HttpSession session, Model model) {
-        session.invalidate();
-        model.addAttribute("success", "Sớm quay lại bạn nhé!");
+        User currentUser = (User) authUser.getPrincipal();
+        model.addAttribute("title", "HPT Online Course");
+        model.addAttribute("success", "Welcome <b>" + currentUser.getFullName() + "</b>!");
         return "index";
     }
 
+    // Login cách cũ
+    /*@RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String loginUser(@ModelAttribute("user") User user, Model model) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User currentUser = (User) authUser.getPrincipal();
+        model.addAttribute("title", "HPT Online Course");
+        model.addAttribute("success", "Welcome <b>" + currentUser.getFullName() + "</b>!");
+        return "index";
+    }
+
+    @GetMapping(value = "/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if (authUser instanceof AnonymousAuthenticationToken) {
+            return "index";
+        }
+
+        new SecurityContextLogoutHandler().logout(request, response, authUser);
+
+        return "redirect:/login?logout";
+    }*/
+
     // Profile
     @GetMapping(value = "/profile")
-    public String profile(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute("user");
+    public String profile(Model model) {
+        // get current user
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if (authUser instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }
+
+        User currentUser = (User) authUser.getPrincipal();
+
         model.addAttribute("title", "Profile");
         model.addAttribute("user", currentUser);
         return "profile";
     }
 
     @RequestMapping(value = "/update-profile", method = RequestMethod.POST)
-    public String updateUser(HttpSession session, @ModelAttribute("user") User user, Model model) {
-        User currentUser = (User) session.getAttribute("user");
-        if (StringUtils.equalsIgnoreCase(currentUser.getUserName(), user.getUserName())) {
+    public String updateUser(@ModelAttribute("user") User user, Model model) {
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if (authUser instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }
+        User currentUser = (User) authUser.getPrincipal();
+
+        if (StringUtils.equalsIgnoreCase(currentUser.getUsername(), user.getUsername())) {
             user.setId(currentUser.getId());
             if (StringUtils.isEmpty(user.getPassword())) {
                 user.setPassword(currentUser.getPassword());
             }
             userService.save(user);
-            session.setAttribute("user", user);
             model.addAttribute("success", "Cập nhật thông tin thành công.");
+            model.addAttribute("title", "HPT Online Course");
             return "index";
         }
         model.addAttribute("error", "Bạn không có quền cập nhật thông tin người khác.");
@@ -123,11 +166,17 @@ public class UserController {
     }
 
     @GetMapping(value = "/delete-profile")
-    public String deleteUser(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute("user");
+    public String deleteUser(Model model) {
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if (authUser instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }
+
+        User currentUser = (User) authUser.getPrincipal();
+
         userService.deleteById(currentUser.getId());
-        session.invalidate();
         model.addAttribute("success", "Xóa tài khoản thành công.");
+        model.addAttribute("title", "HPT Online Course");
         return "index";
     }
 }

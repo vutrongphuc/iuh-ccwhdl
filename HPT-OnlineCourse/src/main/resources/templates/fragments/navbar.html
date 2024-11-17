@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>navbar</title>
@@ -33,24 +33,27 @@
                 <a href="contact.html" class="nav-item nav-link">Contact Us</a>
 
             </div>
-            <a th:if="!${session.user}" th:href="@{/login}" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">
+            <a sec:authorize="isAnonymous()" th:href="@{/login}"
+               class="btn btn-primary rounded-pill px-3 d-none d-lg-block">
                 Tham gia ngay <i class="fa fa-arrow-right ms-3"></i>
             </a>
-            <div th:if="${session.user}" class="nav-item dropdown">
-                <a th:href="@{/profile}"
+            <div sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="#"
                    class="btn btn-primary rounded-pill px-3 d-none d-lg-block nav-link dropdown-toggle"
                    data-bs-toggle="dropdown">
-                    Trang cá nhân
+                    <i class="fa fa-crown me-2" sec:authorize="hasRole('ADMIN')"></i>
+                    <i class="fa fa-user me-2" sec:authorize="hasRole('USER')"></i>
+                    <span sec:authentication="principal.fullName" class="me-1"></span>
                 </a>
                 <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
-                    <a th:href="@{/}" class="dropdown-item">Xem thông tin</a>
+                    <a th:href="@{/profile}" class="dropdown-item">Xem thông tin</a>
                     <a th:href="@{/}" class="dropdown-item">Khóa học của tôi</a>
-                    <hr th:if="${session.user.isAdmin()}" class="dropdown-divider">
-                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                    <hr sec:authorize="hasRole('ADMIN')" class="dropdown-divider">
+                    <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
                         lý danh mục</a>
-                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                    <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
                         lý tác giả</a>
-                    <a th:href="@{/}" th:if="${session.user.isAdmin()}" class="dropdown-item">Quản
+                    <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
                         lý khóa học</a>
                     <hr class="dropdown-divider">
                     <a th:href="@{/logout}" class="dropdown-item">Thoát</a>
