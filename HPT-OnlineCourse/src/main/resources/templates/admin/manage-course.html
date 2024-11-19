@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="layout::main(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <title>manage-course</title>
+</head>
+<body>
+<section>
+    <div class="container">
+        <h2>Quản lý khóa học</h2>
+
+        <form th:action="@{/manage-course}" method="post">
+            <label for="ytUrl">YouTube URL:</label>
+            <input type="text" id="ytUrl" name="ytUrl" required>
+            <button type="submit">Lấy thông tin</button>
+        </form>
+
+        <hr>
+
+        <form th:action="@{/manage-course/save}" method="post" th:object="${course}">
+            <input type="hidden" th:field="*{ytId}"/>
+            <div>
+                <label for="courseName">Tên khóa học:</label>
+                <input type="text" id="courseName" th:field="*{courseName}" required>
+            </div>
+
+            <div>
+                <label for="courseDesc">Mô tả:</label>
+                <textarea id="courseDesc" th:field="*{courseDesc}" required></textarea>
+            </div>
+
+            <div>
+                <label for="duration">Thời lượng khóa học:</label>
+                <input type="text" id="duration" th:field="*{duration}" required>
+            </div>
+
+            <div>
+                <label for="author">Tác giả:</label>
+                <input id="author" th:field="*{author}" required>
+            </div>
+
+            <div>
+                <input  th:field="*{createdAt}" hidden="hidden">
+            </div>
+            <button type="submit">Lưu khóa học</button>
+        </form>
+    </div>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+</html>

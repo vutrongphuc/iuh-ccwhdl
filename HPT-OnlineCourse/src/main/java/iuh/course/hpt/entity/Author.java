@@ -19,7 +19,7 @@ public class Author {
     private Long id;
 
     @Column(name = "author_name", nullable = false, length = 255)
-    private String author_name;
+    private String authorName;
 
     @Column(name = "author_intro", nullable = false, columnDefinition = "TEXT")
     private String author_intro;
