@@ -19,29 +19,23 @@
         <div class="container">
             <div class="bg-light rounded">
                 <div class="row g-0">
-                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="col-lg-3 col-sm-12 wow fadeIn" data-wow-delay="0.1s">
                         <div class="position-relative h-100">
                             <!-- Sidebar -->
                             <div th:replace="fragments/sidebar :: sidebar"></div>
                         </div>
                     </div>
-                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="col-lg-9 col-sm-12 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 d-flex flex-column justify-content-center p-5">
-                            <p class="mb-4"><strong>Đăng nhập</strong> để trải nghiệm hàng sa số khóa học từ Youtube</p>
-                            <form th:action="@{/register}" method="post" th:object="${user}" autocomplete="nope">
+                            <form th:action="@{/update-profile}" method="post" th:object="${user}" autocomplete="nope">
                                 <!-- Alert Section-->
                                 <div th:replace="fragments/alert :: alert"></div>
-
+                                <p class="mb-4">Thông tin cá nhân</p>
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control border-0"
-                                                   id="user_name" name="user_name"
-                                                   required placeholder="Tên đăng nhập"
-                                                   autocomplete="nope"
-                                                   autofocus
-                                                   th:field="*{username}">
-                                            <label for="user_name">Tên đăng nhập</label>
+                                            <span class="form-control border-0" th:text="${user.username}"></span>
+                                            <label>Tên đăng nhập</label>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -50,15 +44,17 @@
                                                    id="full_name" name="full_name"
                                                    required placeholder="Họ tên"
                                                    autocomplete="off"
+                                                   th:value="${user.fullName}"
                                                    th:field="*{fullName}">
                                             <label for="full_name">Họ tên</label>
                                         </div>
                                     </div>
+                                    <span>Bỏ trống nếu không muốn đổi password</span>
                                     <div class="col-sm-6">
                                         <div class="form-floating">
                                             <input type="password" class="form-control border-0"
                                                    id="password"
-                                                   required placeholder="Password"
+                                                   placeholder="Password"
                                                    autocomplete="new-password"
                                                    th:field="*{password}"/>
                                             <div class="show-password" onclick="togglePassword(false)">
@@ -71,7 +67,7 @@
                                         <div class="form-floating">
                                             <input type="password" class="form-control border-0"
                                                    id="repeat_password"
-                                                   required placeholder="Nhập lại Password"
+                                                   placeholder="Nhập lại Password"
                                                    autocomplete="new-password"
                                                    th:field="*{repeatPassword}"/>
                                             <div class="show-password" onclick="togglePassword(true)">
@@ -81,11 +77,8 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100 py-3" type="submit">Tạo tài khoản</button>
+                                        <button class="btn btn-primary w-100 py-3" type="submit">Cập nhật thông tin</button>
                                     </div>
-                                    <p style="margin-top:10px; text-align: right;">
-                                        <a th:href="@{/login}"><strong>Đã có tài khoản?</strong></a>
-                                    </p>
                                 </div>
                             </form>
                         </div>

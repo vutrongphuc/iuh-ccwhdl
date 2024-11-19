@@ -46,7 +46,7 @@
                     <span sec:authentication="principal.fullName" class="me-1"></span>
                 </a>
                 <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
-                    <a th:href="@{/profile}" class="dropdown-item">Xem thông tin</a>
+                    <a th:href="@{/profile}" class="dropdown-item">Trang cá nhân</a>
                     <a th:href="@{/}" class="dropdown-item">Khóa học của tôi</a>
                     <hr sec:authorize="hasRole('ADMIN')" class="dropdown-divider">
                     <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản

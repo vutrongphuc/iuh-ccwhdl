@@ -7,6 +7,9 @@ public interface UserService {
     boolean isUserExisted(String userName);
 
     User save(User user);
+    
+    // update user
+    User update(User user);
 
     void deleteById(Long id);
 
