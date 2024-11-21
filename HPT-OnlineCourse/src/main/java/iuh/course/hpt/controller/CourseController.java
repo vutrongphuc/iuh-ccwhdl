@@ -3,57 +3,44 @@ package iuh.course.hpt.controller;
 import iuh.course.hpt.entity.Course;
 import iuh.course.hpt.service.interfaces.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
 public class CourseController {
-
     @Autowired
     private CourseService courseService;
 
+    // retrieve all courses
     @GetMapping("/course")
-    public String course(Model model) {
+    public String allCourses(Model model) {
+        // list courses
         List<Course> courses = courseService.getAllCourses();
 
+        model.addAttribute("title", "Khóa học");
         model.addAttribute("courses", courses);
-        return "course";
+        return "list-course";
     }
 
-    @GetMapping("/manage-course")
-    public String manageCourse(Model model) {
-        model.addAttribute("course", new Course());
-        return "admin/manage-course";
-    }
+    // course detail page
+    @GetMapping("/course/{id}")
+    public String getACourse(@PathVariable("id") int id, Model model) {
+        Course course = courseService.getCourseById(id);
 
-
-    @PostMapping("/manage-course")
-    public String fetchCourse(@RequestParam String ytUrl, Model model) {
-        String ytId = courseService.extractYoutubeId(ytUrl);
-        if (ytId != null) {
-            Course course = courseService.fetchYoutubeData(ytId);
-
-            if (course != null) {
-                model.addAttribute("course", course);
-            } else {
-                model.addAttribute("error", "Failed to fetch course details.");
-            }
-
-            return "admin/manage-course";
+        if (course == null) {
+            model.addAttribute("error", "Không tìm thấy khóa học");
+            return "course-detail";
         }
 
-        model.addAttribute("error", "Invalid YouTube URL.");
-        return "admin/manage-course";
+        model.addAttribute("title", "Khóa học");
+        model.addAttribute("course", course);
+        return "course-detail";
     }
 
-    @PostMapping("/manage-course/save")
-    public String saveCourse(Course course) {
-        courseService.saveCourse(course);
-        return "redirect:/manage-course";
-    }
 }
