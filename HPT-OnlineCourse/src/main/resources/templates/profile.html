@@ -28,8 +28,6 @@
                     <div class="col-lg-9 col-sm-12 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 d-flex flex-column justify-content-center p-5">
                             <form th:action="@{/update-profile}" method="post" th:object="${user}" autocomplete="nope">
-                                <!-- Alert Section-->
-                                <div th:replace="fragments/alert :: alert"></div>
                                 <p class="mb-4">Thông tin cá nhân</p>
                                 <div class="row g-3">
                                     <div class="col-sm-6">
