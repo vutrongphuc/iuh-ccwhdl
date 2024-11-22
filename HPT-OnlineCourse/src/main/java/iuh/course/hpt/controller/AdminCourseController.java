@@ -37,6 +37,7 @@ public class AdminCourseController {
         return "admin/admin-course";
     }
 
+    // TODO
     // get course information from youtube url
     @PostMapping("/admin-course")
     public String responseYtInfo(@RequestParam String ytUrl, Course course, Model model) {
@@ -58,6 +59,7 @@ public class AdminCourseController {
         return "admin/admin-course";
     }
 
+    // TODO
     // add new course from youtube info on the same page
     @PostMapping("/admin-course/add")
     public String addNewCourse(@RequestParam String ytId,
