@@ -49,7 +49,7 @@
                     <a th:href="@{/profile}" class="dropdown-item">Trang cá nhân</a>
                     <a th:href="@{/}" class="dropdown-item">Khóa học của tôi</a>
                     <hr sec:authorize="hasRole('ADMIN')" class="dropdown-divider">
-                    <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
+                    <a th:href="@{/admin/category}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
                         lý danh mục</a>
                     <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="dropdown-item">Quản
                         lý tác giả</a>

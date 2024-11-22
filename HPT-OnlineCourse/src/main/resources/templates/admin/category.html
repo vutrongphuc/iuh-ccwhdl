@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="layout::main(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <title>admin</title>
+</head>
+<body>
+<section>
+    <!-- Page Header End -->
+    <div class="container-xxl py-5 page-header position-relative mb-5">
+        <div class="container">
+            <h1 class="display-6 text-white animated text-shadow slideInDown mt-4" th:text="title"></h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Sidebar Start -->
+    <div class="container-xxl">
+        <div class="container">
+            <div class="bg-light rounded">
+                <div class="row g-0">
+                    <div class="col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="position-relative h-100">
+                            <!-- Sidebar -->
+                            <div th:replace="fragments/sidebar :: sidebar"></div>
+
+                            <!-- Sidebar edit -->
+                            <div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 280px;">
+                                <ul class="nav nav-pills flex-column mb-auto">
+                                    <li>
+                                        <a href="#add-course" class="nav-link link-dark">
+                                            <svg class="bi me-2" width="16" height="16">
+                                                <use xlink:href="#people-circle"/>
+                                            </svg>
+                                            Thêm danh mục
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Sidebar End-->
+                        </div>
+                    </div>
+
+                    <!-- Main course page Start-->
+                    <div class="col-lg-9 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="h-100 d-flex flex-column justify-content-center p-5">
+
+                            <!-- List all course Start -->
+                            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                                <h6 class="border-bottom pb-2 mb-0">Danh sách danh mục</h6>
+                                <div class="d-flex text-body-secondary pt-3" th:each="cat : ${categories}">
+                                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong class="text-gray-dark"
+                                                        th:text="${cat.getCategoryName()}"></strong>
+                                            </div>
+                                            <div class="btn-group" style="height: 2rem">
+                                                <a th:href="@{'/admin-course/update/' + ${cat.id}}"
+                                                   class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
+
+                                                <form th:action="@{/admin-course/delete}" method="post">
+                                                    <input type="hidden" name="id" th:value="${cat.id}">
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-primary btn-outline-secondary">Xóa
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- List all course End -->
+                        </div>
+                    </div>
+                    <!-- Main course page End-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
