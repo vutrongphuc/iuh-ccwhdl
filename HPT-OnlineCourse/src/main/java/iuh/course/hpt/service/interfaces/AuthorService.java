@@ -9,7 +9,5 @@ public interface AuthorService {
 
     // Add new author
     void saveAuthor(Author author);
-
-    // Get or create author
-    Author getOrCreateAuthor(String authorName);
+    
 }

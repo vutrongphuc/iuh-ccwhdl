@@ -3,12 +3,10 @@ package iuh.course.hpt.controller;
 import iuh.course.hpt.entity.Course;
 import iuh.course.hpt.service.interfaces.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class CourseController {
     // course detail page
     @GetMapping("/course/{id}")
     public String getACourse(@PathVariable("id") int id, Model model) {
-        Course course = courseService.getCourseById(id);
+        Course course = courseService.findCourseById(id);
 
         if (course == null) {
             model.addAttribute("error", "Không tìm thấy khóa học");

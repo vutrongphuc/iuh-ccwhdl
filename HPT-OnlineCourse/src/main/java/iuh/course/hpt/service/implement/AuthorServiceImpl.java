@@ -21,17 +21,4 @@ public class AuthorServiceImpl implements AuthorService {
     public void saveAuthor(Author author) {
         authorRepository.save(author);
     }
-
-    @Override
-    public Author getOrCreateAuthor(String authorName) {
-        Author author = findByAuthorName(authorName);
-        if (author == null) {
-            author.setAuthorName(authorName);
-            author.setAuthor_intro("Thông tin tác giả hiện chưa được cập nhật.");
-            author.setAuthor_email(authorName.replace(" ", "") + "@gmail.com"); // Email
-            saveAuthor(author);
-        }
-        return author;
-    }
-
 }

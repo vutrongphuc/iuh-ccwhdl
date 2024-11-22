@@ -36,12 +36,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(int id) {
+    public Course findCourseById(int id) {
         return courseRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void saveCourse(Course course) {
-        courseRepository.save(course);
+    public Course findCourseByYtId(String ytId) {
+        return courseRepository.findByYtId(ytId);
     }
 }

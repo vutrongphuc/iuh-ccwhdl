@@ -1,6 +1,5 @@
 package iuh.course.hpt.service.implement;
 
-import iuh.course.hpt.entity.Author;
 import iuh.course.hpt.entity.Course;
 import iuh.course.hpt.repository.CourseRepository;
 import iuh.course.hpt.service.interfaces.AdminCourseService;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,18 +44,19 @@ public class AdminCourseServiceImpl implements AdminCourseService {
 
     // Gọi API
     @Override
-    public Course fetchYoutubeData(String ytId) {
-        boolean existingYtId = courseRepository.existsByYtId(ytId);
+    public List<String> fetchYoutubeData(String ytId) {
+        List<String> youtubeInfo = new ArrayList<>();
+        Course existingYtId = courseRepository.findByYtId(ytId);
 
-        if (ytId != null && !existingYtId) {
+        if (ytId != null && existingYtId != null) {
             String apiURL = ytApiUrl.replace("{0}", ytApiKey)
                     .replace("{1}", ytApiPart)
                     .replace("{2}", ytId);
 
 
-            RestTemplate restTemplate = new RestTemplate();
-
             try {
+                RestTemplate restTemplate = new RestTemplate();
+
                 Map response = restTemplate.getForObject(apiURL, Map.class);
                 Map videoDetails = ((List<Map>) response.get("items")).get(0);
 
@@ -65,27 +66,13 @@ public class AdminCourseServiceImpl implements AdminCourseService {
                 String courseAuthor = (String) ((Map) videoDetails.get("snippet")).get("channelTitle");
                 String duration = (String) ((Map) videoDetails.get("contentDetails")).get("duration");
 
-                Author author = authorService.findByAuthorName(courseAuthor);
-                if (author == null) {
-                    author = new Author();
-                    author.setAuthorName(courseAuthor);
-                    author.setAuthor_intro("Thông tin tác giả hiện chưa được cập nhật.");
+                youtubeInfo.add(courseName);
+                youtubeInfo.add(courseDesc);
+                youtubeInfo.add(courseAuthor);
+                youtubeInfo.add(duration);
+                youtubeInfo.add(ytId);
 
-                    String email = courseAuthor.replace(" ", "") + "@gmail.com";
-                    author.setAuthor_email(email);
-
-                    authorService.saveAuthor(author);
-                }
-
-                // Tạo mới khóa học
-                Course course = new Course();
-                course.setYtId(ytId);
-                course.setCourseName(courseName);
-                course.setCourseDesc(courseDesc);
-                course.setDuration(duration);
-                course.setAuthor(author);
-
-                return course;
+                return youtubeInfo;
 
             } catch (Exception e) {
                 return null;
@@ -95,22 +82,27 @@ public class AdminCourseServiceImpl implements AdminCourseService {
     }
 
     @Override
-    public void saveCourse(Course course) {
-        if (course.getId() == null) {
+    public void addCourse(Course course) {
+        Course existingCourse = courseRepository.findByYtId(course.getYtId());
+        if (existingCourse == null) {
             courseRepository.save(course);
-        } else {
-            throw new IllegalArgumentException("The given id must not be null");
+        }
+    }
+
+    @Override
+    public void updateCourse(int id, Course course) {
+        // update info course
+        Course updatedCourse = courseRepository.findById(id).orElse(null);
+        if (updatedCourse != null) {
+            updatedCourse.setCourseName(course.getCourseName());
+            updatedCourse.setCourseDesc(course.getCourseDesc());
+            courseRepository.save(updatedCourse);
         }
     }
 
     @Override
     public void deleteCourse(int id) {
         courseRepository.deleteById(id);
-    }
-
-    @Override
-    public Course findCourseById(int id) {
-        return courseRepository.findById(id).orElse(null);
     }
 
 }

@@ -9,6 +9,6 @@ import java.util.List;
 public interface CourseService {
     List<Course> getAllCourses();
     Page<Course> pageAllCourse(Pageable pageable);
-    Course getCourseById(int id);
-    void saveCourse(Course course);
+    Course findCourseById(int id);
+    Course findCourseByYtId(String ytId);
 }
