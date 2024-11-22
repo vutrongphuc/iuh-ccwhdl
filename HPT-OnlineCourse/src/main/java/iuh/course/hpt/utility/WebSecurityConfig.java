@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
 
                         .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/update-profile").authenticated()
                         .anyRequest().permitAll() // other pages are allowed for all
                 )
                 .formLogin((form) -> form

@@ -14,4 +14,19 @@ public class HomeController {
         model.addAttribute("title", "HPT Online Course");
         return "index";
     }
+    
+    // 404 page
+    @GetMapping("/404")
+    public String error404(Model model) {
+        model.addAttribute("title", "404 - Page Not Found");
+        return "404";
+    }
+    
+    // 403 page
+    @GetMapping("/403")
+    public String error403(Model model) {
+        model.addAttribute("title", "403 - Access Denied");
+        return "403";
+    }
+    
 }

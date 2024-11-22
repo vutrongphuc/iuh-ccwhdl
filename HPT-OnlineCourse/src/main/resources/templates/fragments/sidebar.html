@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>sidebar</title>
@@ -8,19 +8,19 @@
 <div th:fragment="sidebar">
     <!-- Sidebar Start -->
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32">
-                <use xlink:href="#bootstrap"/>
-            </svg>
+        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+            <i class="fa fa-crown me-2" sec:authorize="hasRole('ADMIN')"></i>
+            <i class="fa fa-user me-2" sec:authorize="hasRole('USER')"></i>
+            <span sec:authentication="principal.fullName" class="me-1 fs-4"></span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">
+                <a href="/profile" class="nav-link active" aria-current="page">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#home"/>
                     </svg>
-                    Home
+                    Trang cá nhân
                 </a>
             </li>
             <li>
@@ -28,7 +28,7 @@
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#speedometer2"/>
                     </svg>
-                    Dashboard
+                    Khóa học của tôi
                 </a>
             </li>
             <li>
@@ -36,7 +36,7 @@
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#table"/>
                     </svg>
-                    Orders
+                    Quản lý danh mục
                 </a>
             </li>
             <li>

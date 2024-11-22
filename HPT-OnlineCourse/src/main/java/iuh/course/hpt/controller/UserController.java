@@ -1,11 +1,7 @@
 package iuh.course.hpt.controller;
 
 import iuh.course.hpt.entity.User;
-import iuh.course.hpt.service.implement.UserDetailsServiceImpl;
-import iuh.course.hpt.service.implement.UserServiceImpl;
 import iuh.course.hpt.service.interfaces.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -13,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +41,7 @@ public class UserController {
     public String saveUser(@ModelAttribute("user") User user, Model model) {
 
         // check repeat password
-        if (!StringUtils.equalsIgnoreCase(user.getPassword(), user.getRepeatPassword())) {
+        if (!StringUtils.equals(user.getPassword(), user.getRepeatPassword())) {
             model.addAttribute("error", "Mật khẩu không khớp");
             return "register";
         }
@@ -132,51 +127,35 @@ public class UserController {
     public String profile(Model model) {
         // get current user
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser instanceof AnonymousAuthenticationToken) {
-            return "login";
-        }
-
         User currentUser = (User) authUser.getPrincipal();
 
-        model.addAttribute("title", "Profile");
-        model.addAttribute("user", currentUser);
+        // get user by username
+        User user = userService.findByUsername(currentUser.getUsername());
+
+        model.addAttribute("title", "Trang cá nhân");
+        model.addAttribute("user", user);
         return "profile";
     }
 
     @RequestMapping(value = "/update-profile", method = RequestMethod.POST)
-    public String updateUser(@ModelAttribute("user") User user, Model model) {
+    public String updateUser(@ModelAttribute("user") User userProfile, Model model) {
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser instanceof AnonymousAuthenticationToken) {
-            return "login";
-        }
         User currentUser = (User) authUser.getPrincipal();
-
-        if (StringUtils.equalsIgnoreCase(currentUser.getUsername(), user.getUsername())) {
-            user.setId(currentUser.getId());
-            if (StringUtils.isEmpty(user.getPassword())) {
-                user.setPassword(currentUser.getPassword());
+        userProfile.setUsername(currentUser.getUsername());
+        
+        if (!StringUtils.isEmpty(userProfile.getPassword())) {
+            // check repeat password
+            if (!StringUtils.equals(userProfile.getPassword(), userProfile.getRepeatPassword())) {
+                model.addAttribute("error", "Mật khẩu không khớp");
+                return "profile";
             }
-            userService.save(user);
-            model.addAttribute("success", "Cập nhật thông tin thành công.");
-            model.addAttribute("title", "HPT Online Course");
-            return "index";
         }
-        model.addAttribute("error", "Bạn không có quền cập nhật thông tin người khác.");
+        User user = userService.update(userProfile);
+        
+        // update user in session
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+        
+        model.addAttribute("success", "Cập nhật thông tin thành công.");
         return "profile";
-    }
-
-    @GetMapping(value = "/delete-profile")
-    public String deleteUser(Model model) {
-        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser instanceof AnonymousAuthenticationToken) {
-            return "login";
-        }
-
-        User currentUser = (User) authUser.getPrincipal();
-
-        userService.deleteById(currentUser.getId());
-        model.addAttribute("success", "Xóa tài khoản thành công.");
-        model.addAttribute("title", "HPT Online Course");
-        return "index";
     }
 }

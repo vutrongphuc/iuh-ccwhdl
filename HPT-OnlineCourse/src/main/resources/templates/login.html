@@ -32,15 +32,13 @@
                         <div class="h-100 d-flex flex-column justify-content-center p-5">
                             <p class="mb-4"><strong>Đăng nhập</strong> để trải nghiệm hàng sa số khóa học từ Youtube</p>
                             <form th:action="@{/login}" method="post" th:object="${user}">
-                                <!-- Alert Section-->
-                                <div th:replace="fragments/alert :: alert"></div>
-                                
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="form-floating">
                                             <input type="text" class="form-control border-0"
                                                    id="user_name" name="user_name" autofocus
                                                    required placeholder="Tên đăng nhập"
+                                                   th:value="'admin'"
                                                    th:field="*{username}">
                                             <label for="user_name">Tên đăng nhập</label>
                                         </div>
@@ -50,6 +48,7 @@
                                             <input type="password" class="form-control border-0"
                                                    id="password"
                                                    required placeholder="Password"
+                                                   th:value="'admin'"
                                                    th:field="*{password}">
                                             <div class="show-password" onclick="togglePassword()">
                                                 <i id="showPasswordIcon" class="fa fa-eye"></i>
