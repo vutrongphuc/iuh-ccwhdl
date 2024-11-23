@@ -6,6 +6,7 @@ import iuh.course.hpt.entity.Course;
 import iuh.course.hpt.service.interfaces.AuthorService;
 import iuh.course.hpt.service.interfaces.CategoryService;
 import iuh.course.hpt.service.interfaces.CourseService;
+import iuh.course.hpt.utility.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -36,8 +37,12 @@ public class AdminController {
     @Autowired
     private AuthorService authorService;
 
+    /* ------------------- Category Controller Start ------------------- */
     @GetMapping("/admin/category")
-    public String category(Model model) {
+    public String category(@ModelAttribute("error") String error,
+                           @ModelAttribute("success") String success,
+                           Model model) {
+
         model.addAttribute("title", "Quản lý danh mục");
 
         // get all categories
@@ -47,25 +52,25 @@ public class AdminController {
     }
 
     // Create new category
-    @RequestMapping(value = "/admin/category/create", method = RequestMethod.POST)
-    public String createCategory(@ModelAttribute("category") Category category, Model model) {
+    @RequestMapping(value = "/admin/category", method = RequestMethod.POST)
+    public String createCategory(@ModelAttribute("category") Category category,
+                                 @ModelAttribute("error") String error,
+                                 @ModelAttribute("success") String success) {
 
         // check category is existed
         boolean isCategoryExisted = categoryService.isCategoryExisted(category.getCategoryName());
 
         if (isCategoryExisted) {
-            model.addAttribute("error", "Danh mục đã tồn tại");
-            return "admin/category";
+            return "redirect:/admin/category?error=" + Utils.getInstance().encodeUrlSafe("Danh mục đã tồn tại");
         }
 
         Category result = categoryService.save(category);
         if (result != null) {
-            model.addAttribute("success", "Thêm danh mục thành công");
+            return "redirect:/admin/category?success=" + Utils.getInstance().encodeUrlSafe("Thêm danh mục thành công");
         } else {
-            model.addAttribute("error", "Thêm danh mục thất bại");
+            return "redirect:/admin/category?error=" + Utils.getInstance().encodeUrlSafe("Tạo danh mục thất bại");
         }
 
-        return "admin/category";
     }
 
     // Edit category
@@ -101,6 +106,10 @@ public class AdminController {
         return "admin/category";
     }
 
+    /* ------------------- Category Controller End ------------------- */
+
+
+    /* ------------------- Course Controller Start ------------------- */
     @GetMapping("/admin/course")
     public String course(Model model) {
         model.addAttribute("title", "Quản lý khóa học");
@@ -112,13 +121,10 @@ public class AdminController {
     }
 
     // Create new course
-    @RequestMapping(value = "/admin/course/create", method = RequestMethod.POST)
-    public String createCourse(@ModelAttribute("course") Course course, Model model,
+    @RequestMapping(value = "/admin/course", method = RequestMethod.POST)
+    public String createCourse(@ModelAttribute("course") Course course,
                                @RequestParam("authorName") String authorName,
-                               @RequestParam("ytId") String ytId,
-                               @RequestParam("duration") String duration,
-                               @RequestParam("courseName") String courseName,
-                               @RequestParam("courseDesc") String courseDesc) {
+                               Model model) {
 
         // check course is existed
         boolean isCourseExisted = courseService.isCourseExisted(course.getCourseName());
@@ -135,14 +141,11 @@ public class AdminController {
             author = new Author();
             author.setAuthorName(authorName);
             author.setAuthor_intro("Hiện đang cập nhật");
-            author.setAuthor_email(authorName + "@gmail.com");
+            author.setAuthor_email(authorName.toLowerCase().replace(" ", "") + "@gmail.com");
 
             authorService.createAuthor(author);
         }
-        course.setYtId(ytId);
-        course.setDuration(duration);
-        course.setCourseName(courseName);
-        course.setCourseDesc(courseDesc);
+
         course.setAuthor(author);
 
         Course result = courseService.save(course);
@@ -158,7 +161,7 @@ public class AdminController {
 
     // get info youtube
     @RequestMapping(value = "/admin/course/info", method = RequestMethod.POST)
-    public String getCourseInfo(@RequestParam("url") String url, Model model) {
+    public String getCourseInfo(@RequestParam("url") String url, Model model, @ModelAttribute("error") String error) {
 
         String youtubeId = courseService.extractYoutubeId(url);
         String apiUrl = ytApiUrl.replace("{0}", ytApiKey).replace("{1}", ytApiPart).replace("{2}", youtubeId);
@@ -174,16 +177,65 @@ public class AdminController {
             String courseAuthor = (String) ((Map) videoDetails.get("snippet")).get("channelTitle");
             String duration = (String) ((Map) videoDetails.get("contentDetails")).get("duration");
 
-            model.addAttribute("success", "Đã tìm thấy thông tin video");
-
-            model.addAttribute("courseData", Map.of("ytId", youtubeId, "courseName", courseName, "courseDesc", courseDesc, "courseAuthor", courseAuthor, "duration", duration));
+            model.addAttribute("success", "Lấy thông tin khóa học thành công");
+            model.addAttribute("courseData",
+                    Map.of("ytId", youtubeId,
+                            "courseName", courseName,
+                            "courseDesc", courseDesc,
+                            "courseAuthor", courseAuthor,
+                            "duration", duration));
+            return "admin/admin-course";
 
         } catch (Exception e) {
-            model.addAttribute("error", "Không kết nối được video youtube");
-            return "admin/admin-course";
+            return "redirect:/admin/course?error=" + Utils.getInstance().encodeUrlSafe("Không kết nối được video youtube");
         }
 
-        return "admin/admin-course";
     }
 
+    // delete course
+    @RequestMapping(value = "/admin/course/delete", method = RequestMethod.GET)
+    public String deleteCourse(@RequestParam("id") Long id, @RequestParam("authorId") Long authorId,
+                               @ModelAttribute("error") String error,
+                               @ModelAttribute("success") String success) {
+
+        courseService.deleteById(id);
+
+        // if author has no course, delete author
+        if (courseService.countByAuthorId(authorId) == 0) {
+            authorService.deleteAuthor(authorId);
+            return "redirect:/admin/course?success=" + Utils.getInstance().encodeUrlSafe("Xóa khóa học thành công");
+        }
+
+        return "redirect:/admin/course?error=" + Utils.getInstance().encodeUrlSafe("Không thể xóa khóa học");
+    }
+
+    /* ------------------- Course Controller End ------------------- */
+
+
+    /* ------------------- Author Controller Start ------------------- */
+
+    @GetMapping("/admin/author")
+    public String allAuthors(Model model) {
+        model.addAttribute("title", "Quản lý tác giả");
+
+        model.addAttribute("authors", authorService.getAll());
+        return "admin/author";
+    }
+
+    // delete author and all course by author
+    @RequestMapping(value = "/admin/author/delete", method = RequestMethod.GET)
+    public String deleteAuthor(@RequestParam("authorId") Long authorId, @ModelAttribute("success") String success) {
+
+        List<Course> courseList = courseService.findByAuthor(authorId);
+        for (Course c : courseList) {
+            courseService.deleteById(c.getId());
+        }
+
+        authorService.deleteAuthor(authorId);
+        return "redirect:/admin/author?success=" + Utils.getInstance().encodeUrlSafe("Xóa tác giả thành công");
+    }
+
+
+
+    /* ------------------- Author Controller End ------------------- */
 }

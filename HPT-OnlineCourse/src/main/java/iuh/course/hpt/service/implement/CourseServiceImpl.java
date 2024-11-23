@@ -62,4 +62,13 @@ public class CourseServiceImpl implements CourseService {
         return (endIndex == -1) ? youtubeUrl.substring(startIndex) : youtubeUrl.substring(startIndex, endIndex);
     }
 
+    @Override
+    public List<Course> findByAuthor(Long authorId) {
+        return courseRepository.findByAuthorId(authorId);
+    }
+
+    @Override
+    public int countByAuthorId(Long authorId) {
+        return courseRepository.countByAuthorId(authorId);
+    }
 }
