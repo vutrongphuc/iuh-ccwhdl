@@ -21,4 +21,8 @@ public interface AuthorService {
     // Check author is existed
     boolean isAuthorExisted(String authorName);
 
+    Author getById(Long id);
+
+    // Update author
+    Author updateAuthor(Author author);
 }

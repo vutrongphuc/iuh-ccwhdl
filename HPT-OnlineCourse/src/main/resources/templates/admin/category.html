@@ -56,10 +56,12 @@
                                                         th:text="${cat.getCategoryName()}"></strong>
                                             </div>
                                             <div class="btn-group" style="height: 2rem">
-                                                <a th:href="@{'/admin-course/update/' + ${cat.id}}"
+                                                <!-- Edit -->
+                                                <a th:href="@{/admin/category/update(id=${cat.id})}"
                                                    class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
 
-                                                <form th:action="@{/admin/course/delete}" method="post">
+                                                <!-- Delete -->
+                                                <form th:action="@{/admin/category/delete}" method="post">
                                                     <input type="hidden" name="id" th:value="${cat.id}">
                                                     <button type="submit"
                                                             class="btn btn-sm btn-primary btn-outline-secondary">Xóa

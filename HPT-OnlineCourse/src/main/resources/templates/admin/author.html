@@ -46,7 +46,13 @@
                                                 <small class="text-muted text-end"
                                                        th:text="${author.createdAt}"></small>
                                             </div>
+
                                             <div class="btn-group" style="height: 2rem">
+                                                <!-- Edit  -->
+                                                <a th:href="@{/admin/author/update(id=${author.id})}"
+                                                   class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
+
+                                                <!-- Delete  -->
                                                 <form th:action="@{/admin/author/delete}" method="get">
                                                     <input type="hidden" name="authorId" th:value="${author.id}">
                                                     <button type="submit"

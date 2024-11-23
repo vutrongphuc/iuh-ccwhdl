@@ -73,6 +73,19 @@ public class AdminController {
 
     }
 
+    // form update category information
+    @GetMapping("/admin/category/update")
+    public String updateCategory(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("title", "Cập nhật danh mục");
+
+        Category category = categoryService.getById(id);
+
+        // type object update
+        model.addAttribute("type", "category");
+        model.addAttribute("category", category);
+        return "admin/update";
+    }
+
     // Edit category
     @RequestMapping(value = "/admin/category/update", method = RequestMethod.POST)
     public String editCategory(@ModelAttribute("category") Category category, Model model) {
@@ -209,6 +222,48 @@ public class AdminController {
         return "redirect:/admin/course?error=" + Utils.getInstance().encodeUrlSafe("Không thể xóa khóa học");
     }
 
+    // form update course information
+    @GetMapping("/admin/course/update")
+    public String updateInfo(@RequestParam("id") Long id,  Model model) {
+        model.addAttribute("title", "Cập nhật khóa học");
+
+        Course course = courseService.getById(id);
+        // type object update
+        model.addAttribute("type", "course");
+        model.addAttribute("course", course);
+        return "admin/update";
+    }
+
+    // edit course
+    @RequestMapping(value = "/admin/course/update", method = RequestMethod.POST)
+    public String editCourse(@RequestParam("id") Long id,
+                             @RequestParam("courseName") String name,
+                             @RequestParam("courseDesc") String desc,
+                             Model model) {
+
+        // check course is existed
+        boolean isCourseExisted = courseService.isCourseExisted(name);
+
+        if (isCourseExisted) {
+            model.addAttribute("error", "Khóa học đã tồn tại");
+            return "admin/admin-course";
+        }
+
+        Course course = courseService.getById(id);
+
+        course.setCourseName(name);
+        course.setCourseDesc(desc);
+
+        Course result = courseService.save(course);
+        if (result != null) {
+            model.addAttribute("success", "Cập nhật khóa học thành công");
+        } else {
+            model.addAttribute("error", "Cập nhật khóa học thất bại");
+        }
+
+        return "admin/admin-course";
+    }
+
     /* ------------------- Course Controller End ------------------- */
 
 
@@ -235,7 +290,43 @@ public class AdminController {
         return "redirect:/admin/author?success=" + Utils.getInstance().encodeUrlSafe("Xóa tác giả thành công");
     }
 
+    // form update author information
+    @GetMapping("/admin/author/update")
+    public String updateAuthor(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("title", "Cập nhật tác giả");
 
+        Author author = authorService.getById(id);
+        // type object update
+        model.addAttribute("type", "author");
+        model.addAttribute("author", author);
+        return "admin/update";
+    }
+
+    // edit author
+    @RequestMapping(value = "/admin/author/update", method = RequestMethod.POST)
+    public String editAuthor(@RequestParam("id") Long id,
+                             @RequestParam("authorName") String name,
+                             @RequestParam("author_email") String email,
+                             @RequestParam("author_intro") String intro,
+                             Model model) {
+
+        Author author = authorService.getById(id);
+
+        author.setAuthorName(name);
+        author.setAuthor_email(email);
+        author.setAuthor_intro(intro);
+
+        Author result = authorService.updateAuthor(author);
+        if (result != null) {
+            model.addAttribute("success", "Cập nhật tác giả thành công");
+        } else {
+            model.addAttribute("error", "Cập nhật tác giả thất bại");
+        }
+
+        return "admin/author";
+    }
 
     /* ------------------- Author Controller End ------------------- */
+
+
 }

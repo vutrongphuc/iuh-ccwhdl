@@ -60,10 +60,11 @@
                                                        th:text="${course.createdAt}"></small>
                                             </div>
                                             <div class="btn-group" style="height: 2rem">
-                                                <a th:href="@{'/admin/course/update/' + ${course.id}}"
+                                                <!-- Edit -->
+                                                <a th:href="@{/admin/course/update(id=${course.id})}"
                                                    class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
 
-
+                                                <!-- Delete -->
                                                 <form th:action="@{/admin/course/delete}" method="get">
                                                     <input type="hidden" name="id" th:value="${course.id}">
                                                     <input type="hidden" name="authorId" th:value="${course.author.id}">
