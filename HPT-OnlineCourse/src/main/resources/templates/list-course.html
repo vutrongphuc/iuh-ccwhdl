@@ -17,7 +17,6 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a th:href="@{'/course/' + ${course.id}}" class="btn btn-sm btn-primary btn-outline-secondary">Xem chi tiết</a>
-                                <a th:href="@{'/course/' + ${course.id} + '/edit'}" class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
                             </div>
                             <small class="text-muted" th:text="${course.createdAt}">Ngày tạo</small>
                         </div>
