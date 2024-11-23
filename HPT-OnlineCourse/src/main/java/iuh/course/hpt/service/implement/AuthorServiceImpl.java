@@ -18,7 +18,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void saveAuthor(Author author) {
+    public void createAuthor(Author author) {
         authorRepository.save(author);
     }
+
+
 }

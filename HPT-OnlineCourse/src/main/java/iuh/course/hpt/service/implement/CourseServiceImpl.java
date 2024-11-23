@@ -6,11 +6,11 @@ import iuh.course.hpt.repository.CourseRepository;
 import iuh.course.hpt.repository.EnrollmentRepository;
 import iuh.course.hpt.service.interfaces.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -26,22 +26,40 @@ public class CourseServiceImpl implements CourseService {
     private AuthorRepository authorRepository;
 
     @Override
-    public List<Course> getAllCourses() {
+    public Course findYoutubeId(String youtubeId) {
+        return courseRepository.findByYtId(youtubeId);
+    }
+
+    @Override
+    public List<Course> getAll() {
         return courseRepository.findAll();
     }
 
     @Override
-    public Page<Course> pageAllCourse(Pageable pageable) {
-        return courseRepository.findAll(pageable);
-    }
-
-    @Override
-    public Course findCourseById(int id) {
+    public Course getById(Long id) {
         return courseRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Course findCourseByYtId(String ytId) {
-        return courseRepository.findByYtId(ytId);
+    public Course save(Course course) {
+        return courseRepository.save(course);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        courseRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean isCourseExisted(String courseName) {
+        return courseRepository.findByCourseName(courseName) != null;
+    }
+
+    @Override
+    public String extractYoutubeId(String youtubeUrl) {
+        int startIndex = youtubeUrl.indexOf("v=") + 2;
+        int endIndex = youtubeUrl.indexOf("&", startIndex);
+        return (endIndex == -1) ? youtubeUrl.substring(startIndex) : youtubeUrl.substring(startIndex, endIndex);
+    }
+
 }

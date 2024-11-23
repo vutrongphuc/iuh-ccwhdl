@@ -1,14 +1,24 @@
 package iuh.course.hpt.service.interfaces;
 
 import iuh.course.hpt.entity.Course;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface CourseService {
-    List<Course> getAllCourses();
-    Page<Course> pageAllCourse(Pageable pageable);
-    Course findCourseById(int id);
-    Course findCourseByYtId(String ytId);
+
+    Course findYoutubeId(String youtubeId);
+
+    public List<Course> getAll();
+
+    public Course getById(Long id);
+
+    public Course save(Course course);
+
+    public void deleteById(Long id);
+
+    boolean isCourseExisted(String courseName);
+
+    String extractYoutubeId(String youtubeUrl);
+
+
 }

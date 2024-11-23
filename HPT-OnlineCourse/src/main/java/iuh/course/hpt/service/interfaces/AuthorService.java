@@ -8,6 +8,6 @@ public interface AuthorService {
     Author findByAuthorName(String authorName);
 
     // Add new author
-    void saveAuthor(Author author);
+    void createAuthor(Author author);
     
 }

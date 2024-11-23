@@ -19,7 +19,7 @@ public class CourseController {
     @GetMapping("/course")
     public String allCourses(Model model) {
         // list courses
-        List<Course> courses = courseService.getAllCourses();
+        List<Course> courses = courseService.getAll();
 
         model.addAttribute("title", "Khóa học");
         model.addAttribute("courses", courses);
@@ -28,8 +28,8 @@ public class CourseController {
 
     // course detail page
     @GetMapping("/course/{id}")
-    public String getACourse(@PathVariable("id") int id, Model model) {
-        Course course = courseService.findCourseById(id);
+    public String getACourse(@PathVariable("id") Long id, Model model) {
+        Course course = courseService.getById(id);
 
         if (course == null) {
             model.addAttribute("error", "Không tìm thấy khóa học");

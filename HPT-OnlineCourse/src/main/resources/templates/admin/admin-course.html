@@ -41,19 +41,21 @@
                         </div>
                     </div>
 
-                    <!-- Main course page Start-->
+                    <!-- Course page Start-->
                     <div class="col-lg-9 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 d-flex flex-column justify-content-center p-5">
 
-                            <!-- List all course Start -->
                             <div class="my-3 p-3 bg-body rounded shadow-sm">
+
+                                <!-- List all course -->
                                 <h6 class="border-bottom pb-2 mb-0">Danh sách khóa học</h6>
-                                <div class="d-flex text-body-secondary pt-3" th:each="course : ${listCourses}">
+                                <div class="d-flex text-body-secondary pt-3">
                                     <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                                        <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between" th:each="course : ${courses}">
                                             <div>
                                                 <strong class="text-gray-dark" th:text="${course.courseName}"></strong>
-                                                <span class="d-block" th:text="${course.author.getAuthorName()}"></span>
+                                                <span class="d-block"
+                                                      th:text="${course.author.getAuthorName()}"></span>
                                                 <small class="text-muted text-end"
                                                        th:text="${course.createdAt}"></small>
                                             </div>
@@ -61,61 +63,95 @@
                                                 <a th:href="@{'/admin-course/update/' + ${course.id}}"
                                                    class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
 
-                                                <form th:action="@{/admin-course/delete}" method="post">
-                                                    <input type="hidden" name="id" th:value="${course.id}">
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-primary btn-outline-secondary">Xóa
-                                                    </button>
-                                                </form>
+                                                <!-- // TODO -->
+                                                <!--                                                <form th:action="@{/admin/course/delete}" method="post">
+                                                                                                    <input type="hidden" name="id" th:value="${course.id}">
+                                                                                                    <button type="submit"
+                                                                                                            class="btn btn-sm btn-primary btn-outline-secondary">Xóa
+                                                                                                    </button>
+                                                                                                </form>-->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- List all course End -->
 
-                            <!-- Form add course Start -->
-                            <div class="container mt-3" id="add-course">
-                                <h6 class="border-bottom pb-2 mb-0">Thêm khóa học</h6>
-                                <!-- Form input link yt Start -->
-                                <form th:action="@{/admin-course}" method="post" class="pt-3">
-                                    <div class="row mb-3">
-                                        <label for="ytUrl" class="col-sm-2 col-form-label">Nhập link
-                                            YouTube:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="ytUrl" class="form-control" name="ytUrl">
+                                <!-- Form add course Start -->
+                                <div class="container mt-3" id="add-course">
+                                    <h6 class="border-bottom pb-2 mb-0">Thêm khóa học</h6>
+
+                                    <!-- Form enter link Youtube -->
+                                    <form th:action="@{/admin/course/info}" method="post" class="pt-3">
+                                        <div class="row mb-3">
+                                            <label for="ytUrl" class="col-sm-2 col-form-label">Lấy thông tin khóa học từ
+                                                Youtube</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="ytUrl" class="form-control" name="url" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-outline-secondary">Lấy thông tin
-                                    </button>
-                                </form>
-                                <!-- Form input link yt End -->
+                                        <button type="submit" class="btn btn-primary btn-outline-secondary">Lấy thông
+                                            tin
+                                        </button>
+                                    </form>
 
-                                <!-- // TODO -->
-                                <!-- Form submit course start -->
-                                <div th:if="${youtubeInfo != null}">
-                                    <h6 class="border-bottom pb-2 mb-0">Thông tin khóa học</h6>
-                                    <div th:each="info : ${youtubeInfo}">
-                                        <form id="courseForm" th:action="@{/admin-course/add}" method="post"
-                                              class="my-3 p-3 bg-body rounded shadow-sm">
+
+                                    <!-- form show video info -->
+                                    <div th:if="${courseData != null}">
+                                        <h6 class="border-bottom pb-2 mb-0">Thông tin khóa học</h6>
+                                        <form th:action="@{/admin/course/create}" method="post" class="pt-3">
+
+                                            <!-- Youtube ID -->
+                                            <input type="hidden" th:value="${courseData['ytId']}" name="ytId">
+
+                                            <!-- Course name -->
                                             <div class="row mb-3">
-                                                <label for="ytId" class="col-sm-2 col-form-label">Youtube ID:</label>
+                                                <label for="courseName" class="col-sm-2 col-form-label">Tên khóa
+                                                    học:</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="ytId"
-                                                           th:value="${info}" readonly>
+                                                    <input type="text" id="courseName" class="form-control"
+                                                           th:value="${courseData['courseName']}" name="courseName">
                                                 </div>
                                             </div>
-                                            <button type="submit" class="btn btn-primary" value="submit">Thêm khóa học
+
+                                            <!-- Course Desc -->
+                                            <div class="row mb-3">
+                                                <label for="courseDesc" class="col-sm-2 col-form-label">Mô tả:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="courseDesc" class="form-control"
+                                                           th:value="${courseData['courseDesc']}" name="courseDesc">
+                                                </div>
+                                            </div>
+
+                                            <!-- Course Author -->
+                                            <div class="row mb-3">
+                                                <label for="courseAuthor" class="col-sm-2 col-form-label">Tác
+                                                    giả:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="courseAuthor" class="form-control"
+                                                           th:value="${courseData['courseAuthor']}" name="authorName">
+                                                </div>
+                                            </div>
+
+                                            <!-- Course Duration -->
+                                            <div class="row mb-3">
+                                                <label for="courseDuration" class="col-sm-2 col-form-label">Thời
+                                                    lượng:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="courseDuration" class="form-control"
+                                                           th:value="${courseData['duration']}" name="duration">
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-outline-secondary">Tạo khóa
+                                                học
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-                                <!-- Form submit course end -->
+                                <!-- Form add course end -->
                             </div>
-                            <!-- Add course End -->
                         </div>
+                        <!-- Main course page End-->
                     </div>
-                    <!-- Main course page End-->
                 </div>
             </div>
         </div>
