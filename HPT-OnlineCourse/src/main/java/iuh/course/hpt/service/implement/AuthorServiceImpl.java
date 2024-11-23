@@ -6,6 +6,8 @@ import iuh.course.hpt.service.interfaces.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
@@ -22,5 +24,20 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.save(author);
     }
 
+    @Override
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Author> getAll() {
+        return authorRepository.findAll();
+    }
+
+    @Override
+    public boolean isAuthorExisted(String authorName) {
+        Author result = authorRepository.findByAuthorName(authorName);
+        return result != null;
+    }
 
 }
