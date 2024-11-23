@@ -63,7 +63,7 @@
                                                 <a th:href="@{'/admin/course/update/' + ${course.id}}"
                                                    class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
 
-                                                <!-- // TODO -->
+
                                                 <form th:action="@{/admin/course/delete}" method="get">
                                                     <input type="hidden" name="id" th:value="${course.id}">
                                                     <input type="hidden" name="authorId" th:value="${course.author.id}">
