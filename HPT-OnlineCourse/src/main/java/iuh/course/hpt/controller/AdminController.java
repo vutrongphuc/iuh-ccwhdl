@@ -32,9 +32,9 @@ public class AdminController {
         return "admin/category";
     }
 
-    // Create new category
+    // Create - Update category
     @RequestMapping(value = "/admin/category", method = RequestMethod.POST)
-    public String createCategory(@ModelAttribute("category") Category category, Model model) {
+    public String createCategory(@ModelAttribute("category") Category category) {
 
         // check category is existed
         boolean isCategoryExisted = categoryService.isCategoryExisted(category.getCategoryName());
@@ -52,36 +52,12 @@ public class AdminController {
 
     }
 
-    // Edit category
-    @RequestMapping(value = "/admin/category/update", method = RequestMethod.POST)
-    public String editCategory(@ModelAttribute("category") Category category, Model model) {
-
-        // check category is existed
-        boolean isCategoryExisted = categoryService.isCategoryExisted(category.getCategoryName());
-
-        if (isCategoryExisted) {
-            model.addAttribute("error", "Danh mục đã tồn tại");
-            return "admin/category";
-        }
-
-        Category result = categoryService.save(category);
-        if (result != null) {
-            model.addAttribute("success", "Cập nhật danh mục thành công");
-        } else {
-            model.addAttribute("error", "Cập nhật danh mục thất bại");
-        }
-
-        return "admin/category";
-    }
-
     // Delete category
-    @RequestMapping(value = "/admin/category/delete", method = RequestMethod.GET)
-    public String deleteCategory(@ModelAttribute("category") Category category, Model model) {
+    @RequestMapping(value = "/admin/category/delete/{id}", method = RequestMethod.GET)
+    public String deleteCategory(@ModelAttribute("id") Long id) {
 
-        categoryService.deleteById(category.getId());
+        categoryService.deleteById(id);
 
-        model.addAttribute("success", "Xóa danh mục thành công");
-
-        return "admin/category";
+        return "redirect:/admin/category?success=" + Utils.getInstance().encodeUrlSafe("Xóa danh mục thành công");
     }
 }
