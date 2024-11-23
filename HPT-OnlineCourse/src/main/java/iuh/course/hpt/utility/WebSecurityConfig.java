@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/403").permitAll()
                         .requestMatchers("/404").permitAll()
                         // admin pages
-                        .requestMatchers("/admin/**").hasAuthority(RoleEnum.ADMIN.toString())
+                        .requestMatchers("/admin/**").hasRole(RoleEnum.ADMIN.toString())
 
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/update-profile").authenticated()
