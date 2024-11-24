@@ -24,6 +24,7 @@ public class CourseController {
 
         model.addAttribute("title", "Khóa học");
         model.addAttribute("courses", courses);
+        model.addAttribute("path", "course");
         return "list-course";
     }
 
@@ -36,6 +37,7 @@ public class CourseController {
         model.addAttribute("title", "Chi tiết khóa học");
         model.addAttribute("success", "Chào mừng bạn đến với khóa học");
         model.addAttribute("course", course);
+        model.addAttribute("path", "course");
         return "course-detail";
     }
 

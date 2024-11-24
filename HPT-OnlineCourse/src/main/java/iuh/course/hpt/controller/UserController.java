@@ -134,6 +134,7 @@ public class UserController {
 
         model.addAttribute("title", "Trang cá nhân");
         model.addAttribute("user", user);
+        model.addAttribute("path", "profile");
         return "profile";
     }
 

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public final class Utils {
     private static Utils instance;
@@ -44,4 +45,9 @@ public final class Utils {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
+    public Map<String, Object> jsonToMap(String body) {
+        return null;
+        
+        
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class AdminController {
 
     @Value("${yt_api_part}")
     private String ytApiPart;
+    
+    @Value("${yt_thumbnail_url}")
+    private String ytThumbnailUrl;
+    
     @Autowired
     private AuthorService authorService;
 
@@ -47,6 +52,8 @@ public class AdminController {
 
         // create new category
         model.addAttribute("category", new Category());
+
+        model.addAttribute("path", "category");
 
         return "admin/category";
     }
@@ -85,11 +92,13 @@ public class AdminController {
 
     /* ------------------- Course Controller Start ------------------- */
     @GetMapping("/admin/course")
-    public String course(Model model) {
+    public String course(Model model, @ModelAttribute("error") String error, @ModelAttribute("success") String success) {
         model.addAttribute("title", "Quản lý khóa học");
 
         // get all courses
         model.addAttribute("courses", courseService.getAll());
+
+        model.addAttribute("path", "admin-course");
 
         return "admin/admin-course";
     }
@@ -125,12 +134,10 @@ public class AdminController {
         Course result = courseService.save(course);
 
         if (result != null) {
-            model.addAttribute("success", "Thêm khóa học thành công");
+            return "redirect:/admin/course?success=" + Utils.getInstance().encodeUrlSafe("Thêm khóa học thành công");
         } else {
-            model.addAttribute("error", "Thêm khóa học thất bại");
+            return "redirect:/admin/course?error=" + Utils.getInstance().encodeUrlSafe("Thêm khóa học thất bại");
         }
-
-        return "admin/admin-course";
     }
 
     // get info youtube
@@ -138,7 +145,7 @@ public class AdminController {
     public String getCourseInfo(@RequestParam("url") String url, Model model, @ModelAttribute("error") String error) {
 
         String youtubeId = courseService.extractYoutubeId(url);
-        String apiUrl = ytApiUrl.replace("{0}", ytApiKey).replace("{1}", ytApiPart).replace("{2}", youtubeId);
+        String apiUrl = MessageFormat.format(ytApiUrl, ytApiKey, ytApiPart, youtubeId);
 
         // Making an HTTP GET Request to Obtain the JSON Response from the YouTube API
         try {
@@ -157,7 +164,12 @@ public class AdminController {
                             "courseName", courseName,
                             "courseDesc", courseDesc,
                             "courseAuthor", courseAuthor,
-                            "duration", duration));
+                            "duration", duration,
+                            "thumbnail", MessageFormat.format(ytThumbnailUrl, youtubeId)));
+            
+            // category
+            model.addAttribute("categories", categoryService.getAll());
+            
             return "admin/admin-course";
 
         } catch (Exception e) {
@@ -231,10 +243,13 @@ public class AdminController {
     /* ------------------- Author Controller Start ------------------- */
 
     @GetMapping("/admin/author")
-    public String allAuthors(Model model) {
+    public String allAuthors(Model model, @ModelAttribute("error") String error, @ModelAttribute("success") String success) {
         model.addAttribute("title", "Quản lý tác giả");
 
         model.addAttribute("authors", authorService.getAll());
+
+        model.addAttribute("path", "admin-author");
+
         return "admin/author";
     }
 

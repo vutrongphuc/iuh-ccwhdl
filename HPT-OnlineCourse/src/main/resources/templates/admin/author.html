@@ -9,7 +9,7 @@
     <!-- Page Header End -->
     <div class="container-xxl py-5 page-header position-relative mb-5">
         <div class="container">
-            <h1 class="display-6 text-white animated text-shadow slideInDown mt-4">Gia nhập HPT</h1>
+            <h1 class="display-6 text-white animated text-shadow slideInDown mt-4" th:text="title"></h1>
         </div>
     </div>
     <!-- Page Header End -->
@@ -20,46 +20,39 @@
             <div class="bg-light rounded">
                 <div class="row g-0">
                     <div class="col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-                        <div class="position-relative h-100">
-                            <!-- Sidebar -->
-                            <div th:replace="fragments/sidebar :: sidebar"></div>
-
-                            <!-- Sidebar End-->
-                        </div>
+                        <!-- Sidebar -->
+                        <div th:replace="fragments/sidebar :: sidebar"></div>
+                        <!-- Sidebar End-->
                     </div>
 
                     <!-- Author page Start-->
                     <div class="col-lg-9 wow fadeIn" data-wow-delay="0.5s">
-                        <div class="h-100 d-flex flex-column justify-content-center p-5">
+                        <!-- List all author -->
+                        <div class="p-3 m-3 rounded shadow-sm">
+                            <h4 class="border-bottom pb-2">Danh sách tác giả</h4>
+                            <div class="d-flex text-body-secondary pt-3" th:each="author : ${authors}">
+                                <div class="pb-3 mb-0 lh-sm border-bottom w-100">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong class="text-gray-dark" th:text="${author.authorName}"></strong>
+                                            <span class="d-block text-muted"
+                                                  th:text="${author.getAuthor_email()}"></span>
+                                            <small class="text-muted text-end"
+                                                   th:text="${author.createdAt}"></small>
+                                        </div>
 
-                            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                                        <div class="btn-group" style="height: 2rem">
+                                            <!-- Edit  -->
+                                            <a th:href="@{/admin/author/update(id=${author.id})}"
+                                               class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
 
-                                <!-- List all author -->
-                                <h6 class="border-bottom pb-2 mb-3 text-primary">Danh sách tác giả</h6>
-                                <div class="d-flex text-body-secondary pt-3" th:each="author : ${authors}">
-                                    <div class="pb-3 mb-0 lh-sm border-bottom w-100">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <strong class="text-gray-dark" th:text="${author.authorName}"></strong>
-                                                <span class="d-block text-muted"
-                                                      th:text="${author.getAuthor_email()}"></span>
-                                                <small class="text-muted text-end"
-                                                       th:text="${author.createdAt}"></small>
-                                            </div>
-
-                                            <div class="btn-group" style="height: 2rem">
-                                                <!-- Edit  -->
-                                                <a th:href="@{/admin/author/update(id=${author.id})}"
-                                                   class="btn btn-sm btn-outline-secondary">Chỉnh sửa</a>
-
-                                                <!-- Delete  -->
-                                                <form th:action="@{/admin/author/delete}" method="get">
-                                                    <input type="hidden" name="authorId" th:value="${author.id}">
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-primary btn-outline-secondary">Xóa
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <!-- Delete  -->
+                                            <form th:action="@{/admin/author/delete}" method="get">
+                                                <input type="hidden" name="authorId" th:value="${author.id}">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger">Xóa
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
