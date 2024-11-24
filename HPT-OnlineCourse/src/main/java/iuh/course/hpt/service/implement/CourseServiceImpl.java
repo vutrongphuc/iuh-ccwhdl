@@ -57,9 +57,22 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public String extractYoutubeId(String youtubeUrl) {
-        int startIndex = youtubeUrl.indexOf("v=") + 2;
-        int endIndex = youtubeUrl.indexOf("&", startIndex);
-        return (endIndex == -1) ? youtubeUrl.substring(startIndex) : youtubeUrl.substring(startIndex, endIndex);
+        if(youtubeUrl.contains("?v=")){
+            return youtubeUrl.split("\\?v=")[1];
+        }
+        
+        // define the pattern of youtube url
+        String pattern = "^(https?)?(://)?(www.)?(m.)?((youtube.com)|(youtu.be))/";
+        // replace the pattern with empty string
+        String youtubeId = youtubeUrl.replaceAll(pattern, "");
+        // if the youtubeId contains "&" then split it
+        if (youtubeId.contains("&")) {
+            youtubeId = youtubeId.split("&")[0];
+        }
+        if (youtubeId.contains("?")) {
+            youtubeId = youtubeId.split("\\?")[0];
+        }
+        return youtubeId;
     }
 
     @Override

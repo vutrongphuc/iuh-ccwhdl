@@ -1,6 +1,8 @@
 package iuh.course.hpt.controller;
 
+import iuh.course.hpt.service.interfaces.CourseService;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
     
+    @Autowired
+    private CourseService courseService;
+    
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("title", "HPT Online Course");
+        model.addAttribute("path", "home");
+        
+        // List course
+        model.addAttribute("courses", courseService.getAll());
+        
         return "index";
     }
     
