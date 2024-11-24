@@ -2,7 +2,6 @@ package iuh.course.hpt.utility;
 
 import iuh.course.hpt.entity.enums.RoleEnum;
 import iuh.course.hpt.service.implement.UserDetailsServiceImpl;
-import iuh.course.hpt.service.implement.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
+    
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/403").permitAll()
                         .requestMatchers("/404").permitAll()
                         // admin pages
-                        .requestMatchers("/admin/**").hasRole(RoleEnum.ADMIN.toString())
+                        .requestMatchers("/admin/**").hasRole(RoleEnum.ADMIN.name())
 
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/update-profile").authenticated()

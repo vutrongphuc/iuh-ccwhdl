@@ -17,7 +17,7 @@ public final class Utils {
         }
         return instance;
     }
-
+    
     public String encodeUrlSafe(String value) {
         try {
             return encodeUrl(value);
@@ -26,7 +26,7 @@ public final class Utils {
             return null;
         }
     }
-
+    
     public String decodeUrlSafe(String value) {
         try {
             return decodeUrl(value);

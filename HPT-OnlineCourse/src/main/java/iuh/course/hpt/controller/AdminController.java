@@ -39,23 +39,21 @@ public class AdminController {
 
     /* ------------------- Category Controller Start ------------------- */
     @GetMapping("/admin/category")
-    public String category(@ModelAttribute("error") String error,
-                           @ModelAttribute("success") String success,
-                           Model model) {
-
+    public String category(Model model, @ModelAttribute("error") String error, @ModelAttribute("success") String success) {
         model.addAttribute("title", "Quản lý danh mục");
 
         // get all categories
         model.addAttribute("categories", categoryService.getAll());
 
+        // create new category
+        model.addAttribute("category", new Category());
+
         return "admin/category";
     }
 
-    // Create new category
+    // Create - Update category
     @RequestMapping(value = "/admin/category", method = RequestMethod.POST)
-    public String createCategory(@ModelAttribute("category") Category category,
-                                 @ModelAttribute("error") String error,
-                                 @ModelAttribute("success") String success) {
+    public String createCategory(@ModelAttribute("category") Category category) {
 
         // check category is existed
         boolean isCategoryExisted = categoryService.isCategoryExisted(category.getCategoryName());
@@ -66,57 +64,20 @@ public class AdminController {
 
         Category result = categoryService.save(category);
         if (result != null) {
-            return "redirect:/admin/category?success=" + Utils.getInstance().encodeUrlSafe("Thêm danh mục thành công");
+            return "redirect:/admin/category?success=" + Utils.getInstance().encodeUrlSafe("Tạo danh mục thành công");
         } else {
             return "redirect:/admin/category?error=" + Utils.getInstance().encodeUrlSafe("Tạo danh mục thất bại");
         }
 
     }
 
-    // form update category information
-    @GetMapping("/admin/category/update")
-    public String updateCategory(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("title", "Cập nhật danh mục");
-
-        Category category = categoryService.getById(id);
-
-        // type object update
-        model.addAttribute("type", "category");
-        model.addAttribute("category", category);
-        return "admin/update";
-    }
-
-    // Edit category
-    @RequestMapping(value = "/admin/category/update", method = RequestMethod.POST)
-    public String editCategory(@ModelAttribute("category") Category category, Model model) {
-
-        // check category is existed
-        boolean isCategoryExisted = categoryService.isCategoryExisted(category.getCategoryName());
-
-        if (isCategoryExisted) {
-            model.addAttribute("error", "Danh mục đã tồn tại");
-            return "admin/category";
-        }
-
-        Category result = categoryService.save(category);
-        if (result != null) {
-            model.addAttribute("success", "Cập nhật danh mục thành công");
-        } else {
-            model.addAttribute("error", "Cập nhật danh mục thất bại");
-        }
-
-        return "admin/category";
-    }
-
     // Delete category
-    @RequestMapping(value = "/admin/category/delete", method = RequestMethod.GET)
-    public String deleteCategory(@ModelAttribute("category") Category category, Model model) {
+    @RequestMapping(value = "/admin/category/delete/{id}", method = RequestMethod.GET)
+    public String deleteCategory(@ModelAttribute("id") Long id) {
 
-        categoryService.deleteById(category.getId());
+        categoryService.deleteById(id);
 
-        model.addAttribute("success", "Xóa danh mục thành công");
-
-        return "admin/category";
+        return "redirect:/admin/category?success=" + Utils.getInstance().encodeUrlSafe("Xóa danh mục thành công");
     }
 
     /* ------------------- Category Controller End ------------------- */
@@ -224,7 +185,7 @@ public class AdminController {
 
     // form update course information
     @GetMapping("/admin/course/update")
-    public String updateInfo(@RequestParam("id") Long id,  Model model) {
+    public String updateInfo(@RequestParam("id") Long id, Model model) {
         model.addAttribute("title", "Cập nhật khóa học");
 
         Course course = courseService.getById(id);
@@ -327,6 +288,5 @@ public class AdminController {
     }
 
     /* ------------------- Author Controller End ------------------- */
-
 
 }

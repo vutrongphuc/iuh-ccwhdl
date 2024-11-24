@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
     }
-
+    
     @Override
     public boolean isCategoryExisted(String categoryName) {
         Category result = categoryRepository.findByCategoryName(categoryName);
