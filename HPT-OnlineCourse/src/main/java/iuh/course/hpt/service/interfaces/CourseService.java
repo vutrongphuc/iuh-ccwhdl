@@ -24,4 +24,7 @@ public interface CourseService {
     List<Course> findByAuthor(Long authorId);
 
     int countByAuthorId(Long authorId);
+    
+    // find by course name
+    List<Course> findByCourseName(String courseName);
 }

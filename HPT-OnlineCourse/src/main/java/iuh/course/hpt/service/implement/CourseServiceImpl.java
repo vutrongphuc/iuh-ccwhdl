@@ -52,15 +52,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean isCourseExisted(String courseName) {
-        return courseRepository.findByCourseName(courseName) != null;
+        return courseRepository.existsByCourseName(courseName);
     }
 
     @Override
     public String extractYoutubeId(String youtubeUrl) {
-        if(youtubeUrl.contains("?v=")){
+        if (youtubeUrl.contains("?v=")) {
             return youtubeUrl.split("\\?v=")[1];
         }
-        
+
         // define the pattern of youtube url
         String pattern = "^(https?)?(://)?(www.)?(m.)?((youtube.com)|(youtu.be))/";
         // replace the pattern with empty string
@@ -83,5 +83,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public int countByAuthorId(Long authorId) {
         return courseRepository.countByAuthorId(authorId);
+    }
+
+    @Override
+    public List<Course> findByCourseName(String courseName) {
+        return courseRepository.findByCourseNameContaining(courseName);
     }
 }

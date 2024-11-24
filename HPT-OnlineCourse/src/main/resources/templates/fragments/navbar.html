@@ -25,6 +25,12 @@
                     Khóa học
                 </a>-->
             </div>
+
+            <form class="form-inline d-flex me-2" action="/search" method="post">
+                <input class="form-control me-2" name="s" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+
             <a sec:authorize="isAnonymous()" th:href="@{/login}"
                class="btn btn-primary rounded-pill px-3 d-none d-lg-block">
                 Tham gia ngay <i class="fa fa-arrow-right ms-3"></i>

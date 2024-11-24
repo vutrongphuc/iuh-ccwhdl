@@ -18,13 +18,22 @@ public class CourseController {
 
     // retrieve all courses
     @GetMapping("/course")
-    public String allCourses(Model model) {
+    public String allCourses(Model model, @RequestParam(required = false) String s) {
         // list courses
-        List<Course> courses = courseService.getAll();
+        if(s.isEmpty()) {
+            List<Course> courses = courseService.getAll();
+            model.addAttribute("courses", courses);
+            model.addAttribute("count", courses.size());
+        } else {
+            List<Course> courses = courseService.findByCourseName(s);
+            model.addAttribute("courses", courses);
+            model.addAttribute("count", courses.size());
+        }
 
-        model.addAttribute("title", "Khóa học");
-        model.addAttribute("courses", courses);
+        model.addAttribute("keyword", s);
+        model.addAttribute("title", "Tìm khóa học");
         model.addAttribute("path", "course");
+        
         return "list-course";
     }
 

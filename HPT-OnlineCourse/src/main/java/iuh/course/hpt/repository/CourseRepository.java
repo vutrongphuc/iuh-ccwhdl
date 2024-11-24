@@ -8,9 +8,14 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     // find by youtube id
     Course findByYtId(String ytId);
-    Course findByCourseName(String courseName);
-
+    
+    // check if course existed by course name
+    boolean existsByCourseName(String courseName);
+    
     List<Course> findByAuthorId(Long authorId);
 
     int countByAuthorId(Long authorId);
+    
+    // find by course name containing keyword
+    List<Course> findByCourseNameContaining(String keyword);
 }

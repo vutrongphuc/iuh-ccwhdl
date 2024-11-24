@@ -1,6 +1,7 @@
 package iuh.course.hpt.controller;
 
 import iuh.course.hpt.entity.User;
+import iuh.course.hpt.service.interfaces.CourseService;
 import iuh.course.hpt.service.interfaces.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class UserController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+    
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -93,6 +97,10 @@ public class UserController {
         User currentUser = (User) authUser.getPrincipal();
         model.addAttribute("title", "HPT Online Course");
         model.addAttribute("success", "Welcome <b>" + currentUser.getFullName() + "</b>!");
+
+        // List course
+        model.addAttribute("courses", courseService.getAll());
+        
         return "index";
     }
 
