@@ -124,7 +124,7 @@ public class AdminController {
             author = new Author();
             author.setAuthorName(authorName);
             author.setAuthor_intro("Hiện đang cập nhật");
-            author.setAuthor_email(authorName.toLowerCase().replace(" ", "") + "@gmail.com");
+            author.setAuthorEmail(authorName.toLowerCase().replace(" ", "") + "@gmail.com");
 
             authorService.createAuthor(author);
         }
@@ -291,8 +291,19 @@ public class AdminController {
 
         Author author = authorService.getById(id);
 
+        // check email
+        if (!author.getAuthorEmail().equals(name)) {
+
+            boolean emailExisting = authorService.isAuthorEmailExisted(email);
+
+            if (emailExisting) {
+                model.addAttribute("error", "Email đã tồn tại");
+                return "admin/author";
+            }
+        }
+
         author.setAuthorName(name);
-        author.setAuthor_email(email);
+        author.setAuthorEmail(email);
         author.setAuthor_intro(intro);
 
         Author result = authorService.updateAuthor(author);
