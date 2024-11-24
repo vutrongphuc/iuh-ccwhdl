@@ -214,15 +214,18 @@ public class AdminController {
                              @RequestParam("courseDesc") String desc,
                              Model model) {
 
-        // check course is existed
-        boolean isCourseExisted = courseService.isCourseExisted(name);
-
-        if (isCourseExisted) {
-            model.addAttribute("error", "Khóa học đã tồn tại");
-            return "admin/admin-course";
-        }
 
         Course course = courseService.getById(id);
+        if (!course.getCourseName().equals(name)) {
+
+            // check course is existed
+            boolean isCourseExisted = courseService.isCourseExisted(name);
+
+            if (isCourseExisted) {
+                model.addAttribute("error", "Khóa học đã tồn tại");
+                return "admin/admin-course";
+            }
+        }
 
         course.setCourseName(name);
         course.setCourseDesc(desc);
