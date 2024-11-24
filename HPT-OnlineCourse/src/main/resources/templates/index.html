@@ -77,7 +77,8 @@
                                  th:src="'https://img.youtube.com/vi/' + ${course.getYtId()} + '/0.jpg'" alt="">
                         </div>
                         <div class="bg-light rounded p-4 pt-5 mt-n5">
-                            <a class="d-block text-center h3 mt-3 mb-4 text-truncate" href=""
+                            <a class="d-block text-center h3 mt-3 mb-4 text-truncate"
+                               th:href="@{'/course/' + ${course.getId()}}"
                                th:text="${course.getCourseName()}" th:alt-title="${course.getCourseName()}"></a>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="d-flex align-items-center">

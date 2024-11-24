@@ -43,10 +43,8 @@ public class CourseController {
         // get course by id
         Course course = courseService.getById(id);
 
-        model.addAttribute("title", "Chi tiết khóa học");
-        model.addAttribute("success", "Chào mừng bạn đến với khóa học");
+        model.addAttribute("title", course.getCourseName());
         model.addAttribute("course", course);
-        model.addAttribute("path", "course");
         return "course-detail";
     }
 
