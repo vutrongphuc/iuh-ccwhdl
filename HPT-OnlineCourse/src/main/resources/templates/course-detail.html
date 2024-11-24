@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="layout::main(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <title>course-detail</title>
+</head>
+<body>
+<section>
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5 page-header position-relative mb-5">
+        <div class="container">
+            <h1 class="display-6 text-white animated text-shadow slideInDown mt-4">Gia nhập HPT</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- form show course detail -->
+    <div class="container-xxl">
+        <div class="container">
+            <div class="bg-light rounded">
+                <div class="row g-0">
+                    <div class="col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="position-relative h-100">
+                            <!-- Sidebar -->
+                            <div th:replace="fragments/sidebar :: sidebar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Main data -->
+                    <div class="col-lg-9 wow fadeIn" data-wow-delay="0.5s">
+                        <div class="h-100 d-flex flex-column justify-content-center p-5">
+
+                            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">Thông tin khóa học</h6>
+                                <div class="d-flex text-body-secondary pt-3">
+                                    <div class="pb-3 mb-0 lh-sm border-bottom w-100">
+
+                                        <p class="pb-2 mb-3 text-primary" th:text="${course.courseName}"></p>
+                                        <p class="pb-2 mb-3 text-primary" th:text="${course.courseDesc}"></p>
+                                        <p class="pb-2 mb-3 text-primary" th:text="${course.author.authorName}"></p>
+
+                                        <div>
+                                            <div>
+                                                <iframe
+                                                        width="320"
+                                                        height="240"
+                                                        th:src="'https://www.youtube.com/embed/' + ${course.ytId}"
+                                                        frameborder="0"
+                                                        allowfullscreen>
+                                                </iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+</body>
+</html>

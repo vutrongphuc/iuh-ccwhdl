@@ -10,20 +10,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor // Generates a no-args constructor
 @AllArgsConstructor // Generates a constructor with all args
 @Entity
+@IdClass(EnrollmentId.class)
 @Table(name = "enrollment")
 public class Enrollment {
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false, foreignKey = @ForeignKey(name = "FK_course_enrollment"))
+    private Course course;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "FK_user_enrollment"))
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
