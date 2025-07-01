@@ -3,7 +3,6 @@ package iuh.course.hpt.controller;
 import iuh.course.hpt.entity.User;
 import iuh.course.hpt.service.interfaces.CourseService;
 import iuh.course.hpt.service.interfaces.UserService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.thymeleaf.util.StringUtils;
 
 
-@Data
 @Controller
 public class UserController {
 

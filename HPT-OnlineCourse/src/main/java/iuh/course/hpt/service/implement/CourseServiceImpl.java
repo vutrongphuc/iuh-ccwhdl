@@ -18,13 +18,6 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    // inject EnrollmentRepository
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
-
-    @Autowired
-    private AuthorRepository authorRepository;
-
     @Override
     public Course findYoutubeId(String youtubeId) {
         return courseRepository.findByYtId(youtubeId);

@@ -1,4 +1,7 @@
 package iuh.course.hpt.service.interfaces;
 
-public class EnrollmentService {
+public interface EnrollmentService {
+    boolean isEnrolled(Long courseId, Long userId);
+
+    void enroll(Long courseId, Long userId);
 }
