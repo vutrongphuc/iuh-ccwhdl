@@ -11,16 +11,16 @@
         <div class="container">
             <div class="row g-0">
                 <!-- Main data -->
-                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s">
+                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s" th:object="${course}">
                     <br/>
-                    <h3 class="border-bottom pb-2 mb-3" th:text="${course.getCourseName()}"></h3>
+                    <h3 class="border-bottom pb-2 mb-3" th:text="${course.courseName}"></h3>
                     <div class="d-flex text-body-secondary pt-3">
                         <div class="pb-3 mb-0 lh-sm border-bottom w-100">
                             <div class="text-center">
                                 <iframe
                                         width="800"
                                         height="600"
-                                        th:src="'https://www.youtube.com/embed/' + ${course.getYtId()}"
+                                        th:src="'https://www.youtube.com/embed/' + ${course.ytId}"
                                         frameborder="0"
                                         allowfullscreen>
                                 </iframe>
@@ -31,8 +31,8 @@
                                      style="width: 45px; height: 45px;">
                                 <div class="ms-3">
                                     <h6 class="text-primary mb-1"
-                                        th:text="${course.getAuthor().getAuthorName()}"></h6>
-                                    <small th:text="${course.getAuthor().getAuthor_email()}"></small>
+                                        th:text="${course.author.authorName}"></h6>
+                                    <small th:text="${course.author.authorEmail}"></small>
                                 </div>
                             </div>
 

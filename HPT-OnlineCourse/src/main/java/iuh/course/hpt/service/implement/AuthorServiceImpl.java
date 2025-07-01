@@ -49,4 +49,10 @@ public class AuthorServiceImpl implements AuthorService {
     public Author updateAuthor(Author author) {
         return authorRepository.save(author);
     }
+
+    @Override
+    public boolean isAuthorEmailExisted(String authorEmail) {
+        Author result = authorRepository.findAuthorByAuthorEmail(authorEmail);
+        return result != null;
+    }
 }

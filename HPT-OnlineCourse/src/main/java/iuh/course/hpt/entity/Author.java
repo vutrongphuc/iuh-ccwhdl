@@ -25,7 +25,7 @@ public class Author {
     private String author_intro;
 
     @Column(name = "author_email", nullable = false, length = 255)
-    private String author_email;
+    private String authorEmail;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

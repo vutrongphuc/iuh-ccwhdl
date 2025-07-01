@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public int countByAuthorId(Long authorId) {
-        return courseRepository.countByAuthorId(authorId);
+        return courseRepository.countByAuthorId(authorId) ;
     }
 
     @Override
